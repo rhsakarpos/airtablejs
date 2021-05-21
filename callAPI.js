@@ -13,7 +13,7 @@ $(document).ready(function () {
     var t = $('#example').DataTable();
 
     $.ajax({
-        url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?maxRecords=3&view=Grid%20view&api_key=key1TJZtE720NcvkV',
+        url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?maxRecords=10000&view=Grid%20view&api_key=key1TJZtE720NcvkV',
         type: 'GET',
         dataType: 'json',
         contentType: "application/json",
@@ -24,16 +24,18 @@ $(document).ready(function () {
             data.records.forEach(function (element, index) {
                 console.log("bed index : ", index);
                 var fieldArr = new Array(7);
-                for(i=0; i<colArray.length; i++)
-                {
-                    fieldArr[i] = element.fields[colArray[i][1]];
+                for (i = 0; i < colArray.length; i++) {
+                    if (typeof element.fields[colArray[i][1]] === 'undefined') {
+                        fieldArr[i] = "";
+                    } else {
+                        fieldArr[i] = element.fields[colArray[i][1]];
+                    }
                 }
-                t.row.add(fieldArr).draw( false );
+                t.row.add(fieldArr).draw(false);
             });
 
         }
     });
-
 
 
 });
