@@ -12,6 +12,7 @@ $(document).ready(function () {
 
 
     var t = $('#example').DataTable({
+
         columnDefs: [ {
             orderable: false,
             className: 'select-checkbox',
@@ -21,8 +22,26 @@ $(document).ready(function () {
             style:    'os',
             selector: 'td:first-child'
         },
-        order: [[ 1, 'asc' ]]
+        order: [[ 1, 'asc' ]],
+
+        dom: 'Blfrtip',
+
+        buttons: [
+            {
+                text: 'Delete',
+                action: function ( e, dt, node, config ) {
+                    alert( 'Button activated' );
+                }
+            },
+            {
+                text: 'Add',
+                action: function ( e, dt, node, config ) {
+                    alert( 'Button activated' );
+                }
+            }
+        ]
     });
+
 
     $.ajax({
         url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?maxRecords=3&view=Grid%20view&api_key=key1TJZtE720NcvkV',
