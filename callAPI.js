@@ -1,19 +1,31 @@
 var colArray = [
-    [0, "Type"],
-    [1, "Number/Link"],
-    [2, "Description"],
-    [3, "State"],
-    [4, "Location/City"],
-    [5, "Remarks"],
-    [6, "Assignee"]];
+    [0, "false"],
+    [1, "Type"],
+    [2, "Number/Link"],
+    [3, "Description"],
+    [4, "State"],
+    [5, "Location/City"],
+    [6, "Remarks"],
+    [7, "Assignee"]];
 
 $(document).ready(function () {
 
 
-    var t = $('#example').DataTable();
+    var t = $('#example').DataTable({
+        columnDefs: [ {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   0
+        } ],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
+        order: [[ 1, 'asc' ]]
+    });
 
     $.ajax({
-        url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?maxRecords=10000&view=Grid%20view&api_key=key1TJZtE720NcvkV',
+        url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?maxRecords=3&view=Grid%20view&api_key=key1TJZtE720NcvkV',
         type: 'GET',
         dataType: 'json',
         contentType: "application/json",
@@ -23,7 +35,7 @@ $(document).ready(function () {
         success: function (data) {
             data.records.forEach(function (element, index) {
                 console.log("bed index : ", index);
-                var fieldArr = new Array(7);
+                var fieldArr = new Array(8);
                 for (i = 0; i < colArray.length; i++) {
                     if (typeof element.fields[colArray[i][1]] === 'undefined') {
                         fieldArr[i] = "";
