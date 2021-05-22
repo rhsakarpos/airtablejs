@@ -42,11 +42,12 @@ $(document).ready(function () {
                             url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?api_key=key1TJZtE720NcvkV&records[]=' +
                                 t.rows('.selected').data()[i][1],
                             type: 'DELETE',
-                            success: function(result) {
+                            success: function (result) {
                                 console.log('data deleted');
                             }
                         });
                     }
+                    t.rows('.selected').remove().draw(false);
                 }
             },
             {
