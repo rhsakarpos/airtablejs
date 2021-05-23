@@ -1,3 +1,5 @@
+var stateOptions = {"Karnataka": "Karnataka", "Bhopal": "Bhopal"};
+
 var colArray = [
     [0, ""],
     [1, "Id"],
@@ -14,12 +16,15 @@ var colArray = [
 
 var columnDefs = [{
     title: "",
+    "visible": false,
     type: "readonly"
 }, {
     title: "Id",
+    "visible": false,
     type: "text"
 }, {
     title: "Type",
+    "visible": false,
     type: "text"
 }, {
     title: "Number/Link"
@@ -29,7 +34,13 @@ var columnDefs = [{
     type: "text"
 }, {
     title: "State",
-    type: "readonly"
+    type: "select",
+    options: stateOptions,
+    select2: {width: "100%"},
+    render: function (data, type, row, meta) {
+        if (data == null || !(data in stateOptions)) return null;
+        return stateOptions[data];
+    }
 }, {
     title: "Location/City",
     type: "text"
@@ -47,7 +58,6 @@ var columnDefs = [{
                 return data;
             return `<a class="thumbsup fa fa-thumbs-o-up btn" href="#"> ${data}</a>`;
         },
-        type: "number"
         disabled: true
     },
     {
@@ -90,7 +100,8 @@ $(document).ready(function () {
 
         dom: 'Blfrtip',
         altEditor: true,     // Enable altEditor
-        buttons: [
+        buttons: []
+        /*buttons: [
             {
                 text: 'Delete',
                 action: function (e, dt, node, config) {
@@ -114,7 +125,7 @@ $(document).ready(function () {
                     alert('Button activated');
                 }
             }
-        ]
+        ]*/
     });
 
     // thumbs up
@@ -296,5 +307,32 @@ $(document).ready(function () {
         }
     });
 
+    // Delete
+    $('#delbutton').on('click', function () {
+        for (var i = 0; i < t.rows('.selected').data().length; i++) {
+            console.log(t.rows('.selected').data()[i]);
+            $.ajax({
+                url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?api_key=key1TJZtE720NcvkV&records[]=' +
+                    t.rows('.selected').data()[i][1],
+                type: 'DELETE',
+                success: function (result) {
+                    console.log('data deleted');
+                }
+            });
+        }
+        t.rows('.selected').remove().draw(false);
+    });
 
+    // Add row
+    $('#addbutton').on('click', function () {
+        var that = $( '#example' )[0].altEditor;
+        that._openAddModal();
+        $('#altEditor-add-form-' + that.random_id)
+            .off('submit')
+            .on('submit', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                that._addRowData();
+            });
+    });
 });

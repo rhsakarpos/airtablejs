@@ -386,7 +386,7 @@
                     rowDataArray[$(this).attr('id')] = this.checked;
                 });
 
-                // begin custom code to update backend
+                // begin custom code to update backend on edit
                 var xhr = new XMLHttpRequest();
 
                 console.log(rowDataArray); //DEBUG
@@ -412,6 +412,8 @@
                 var loccity = rowDataArray[6];
                 var remarks = rowDataArray[7];
                 var assignee = rowDataArray[8];
+                var upvotes = rowDataArray[9];
+                var downvotes = rowDataArray[10];
 
                     var data = `{"records": [{"id": "${rowid}",
                      "fields": {
@@ -421,7 +423,9 @@
                        "State": "${state}",
                        "Location/City": "${loccity}",
                        "Remarks": "${remarks}",
-                       "Assignee": "${assignee}"
+                       "Assignee": "${assignee}",
+                       "upvotes" : ${upvotes},
+                       "downvotes" : ${downvotes}
                      }
                    }
                  ]
@@ -866,6 +870,56 @@
                 });
 
                 console.log(rowDataArray); //DEBUG
+
+                // begin custom code to update backend on add
+                var xhr = new XMLHttpRequest();
+
+                console.log(rowDataArray); //DEBUG
+
+                var url = 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?api_key=key1TJZtE720NcvkV';
+                xhr.open("POST", url);
+
+                //xhr.setRequestHeader("Authorization", "Bearer YOUR_API_KEY");
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        console.log(xhr.status);
+                        console.log(xhr.responseText);
+                    }
+                };
+
+                var rowid = rowDataArray[1];
+                var type = rowDataArray[2];
+                var numlink = rowDataArray[3];
+                var desc = rowDataArray[4];
+                var state = rowDataArray[5];
+                var loccity = rowDataArray[6];
+                var remarks = rowDataArray[7];
+                var assignee = rowDataArray[8];
+                var upvotes = 0;
+                var downvotes = 0;
+
+                /*var data = `{"records": [{
+                     "fields": {
+                       "Type": "${type}",
+                       "Number/Link": "${numlink}",
+                       "Description": "${desc}",
+                       "State": "${state}",
+                       "Location/City": "${loccity}",
+                       "Remarks": "${remarks}",
+                       "Assignee": "${assignee}",
+                       "upvotes" : ${upvotes},
+                       "downvotes" : ${downvotes}
+                     }
+                   }
+                 ]
+               }`;*/
+                var data = `{"records": [{"fields": {"Type": "${type}","Number/Link": "${numlink}","Description": "${desc}","State": "${state}","Location/City": "${loccity}","Assignee": "${assignee}", "upvotes" : ${upvotes}, "downvotes" : ${downvotes}}}]}`;
+
+
+                xhr.send(data);
+                // end custom code to update backend
 
                 var checkFilesQueued = function () {
                     if (numFilesQueued == 0) {
