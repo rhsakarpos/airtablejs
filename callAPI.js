@@ -9,29 +9,62 @@ var colArray = [
     [7, "Remarks"],
     [8, "Assignee"]];
 
+var columnDefs = [{
+    title: "",
+    type: "readonly"
+}, {
+    title: "Id",
+    type: "text"
+}, {
+    title: "Type",
+    type: "text"
+}, {
+    title: "Number/Link"
+    //no type = text
+}, {
+    title: "Description.",
+    type: "text"
+}, {
+    title: "State",
+    type: "readonly"
+}, {
+    title: "Location/City",
+    type: "text"
+}, {
+    title: "Remarks",
+    type: "text"
+}, {
+    title: "Assignee",
+    type: "text"
+}];
+
 $(document).ready(function () {
 
 
     var t = $('#example').DataTable({
 
-        columnDefs: [{
+        /*columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
-            targets: 0
+            targets: 0,
+            type: "text"
         },
             {
                 "targets": [1],
                 "visible": false,
-                "searchable": false
-            }],
-        select: {
+                "searchable": false,
+                type: "text"
+            }],*/
+        columns: columnDefs,
+        /*select: {
             style: 'multi',
             selector: 'td:first-child'
-        },
+        },*/
+        select: 'single',
         order: [[1, 'asc']],
 
         dom: 'Blfrtip',
-
+        altEditor: true,     // Enable altEditor
         buttons: [
             {
                 text: 'Delete',
@@ -59,9 +92,23 @@ $(document).ready(function () {
         ]
     });
 
+    // Edit
+    $(document).on('click', "[id^='example'] tbody ", 'tr', function () {
+        var tableID = $(this).closest('table').attr('id');    // id of the table
+        var that = $('#' + tableID)[0].altEditor;
+        that._openEditModal();
+        $('#altEditor-edit-form-' + that.random_id)
+            .off('submit')
+            .on('submit', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                that._editRowData();
+            });
+    });
+
 
     $.ajax({
-        url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?maxRecords=3&view=Grid%20view&api_key=key1TJZtE720NcvkV',
+        url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?maxRecords=1000&view=Grid%20view&api_key=key1TJZtE720NcvkV',
         type: 'GET',
         dataType: 'json',
         contentType: "application/json",
@@ -70,7 +117,7 @@ $(document).ready(function () {
         },*/
         success: function (data) {
             data.records.forEach(function (element, index) {
-                console.log("bed index : ", index);
+                //console.log("bed index : ", index);
                 var fieldArr = new Array(9);
                 for (i = 0; i < colArray.length; i++) {
 
