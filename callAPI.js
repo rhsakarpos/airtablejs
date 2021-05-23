@@ -17,11 +17,11 @@ var colArray = [
 var columnDefs = [{
     title: "",
     "visible": false,
-    type: "readonly"
+    type: "hidden"
 }, {
     title: "Id",
     "visible": false,
-    type: "text"
+    type: "hidden"
 }, {
     title: "Type",
     "visible": false,
@@ -52,22 +52,22 @@ var columnDefs = [{
     type: "text"
 },
     {
-        title: "",
+        title: "upvotes",
         render: function (data, type, row, meta) {
             if (type == "sort" || type == 'type')
                 return data;
             return `<a class="thumbsup fa fa-thumbs-o-up btn" href="#"> ${data}</a>`;
         },
-        disabled: true
+        type: "hidden"
     },
     {
-        title: "",
+        title: "downvotes",
         render: function (data, type, row, meta) {
             if (type == "sort" || type == 'type')
                 return data;
             return `<a class="thumbsdown fa fa-thumbs-o-down btn" href="#"> ${data}</a>`;
         },
-        disabled: true
+        type: "hidden"
     }];
 
 $(document).ready(function () {
