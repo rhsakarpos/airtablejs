@@ -334,5 +334,6 @@ $(document).ready(function () {
                 e.stopPropagation();
                 that._addRowData();
             });
+        that.s.dt.draw(false);
     });
 });

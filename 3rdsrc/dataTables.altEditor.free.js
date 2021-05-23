@@ -415,7 +415,7 @@
                 var upvotes = rowDataArray[9];
                 var downvotes = rowDataArray[10];
 
-                    var data = `{"records": [{"id": "${rowid}",
+                var data = `{"records": [{"id": "${rowid}",
                      "fields": {
                        "Type": "${type}",
                        "Number/Link": "${numlink}",
@@ -886,6 +886,8 @@
                     if (xhr.readyState === 4) {
                         console.log(xhr.status);
                         console.log(xhr.responseText);
+                        // set the returned ID in the table row
+                        rowDataArray[1] = JSON.parse(xhr.responseText).records[0].id;
                     }
                 };
 
@@ -899,6 +901,9 @@
                 var assignee = rowDataArray[8];
                 var upvotes = 0;
                 var downvotes = 0;
+
+                rowDataArray[9] = 0;
+                rowDataArray[10] = 0;
 
                 /*var data = `{"records": [{
                      "fields": {
