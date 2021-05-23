@@ -7,7 +7,10 @@ var colArray = [
     [5, "State"],
     [6, "Location/City"],
     [7, "Remarks"],
-    [8, "Assignee"]];
+    [8, "Assignee"],
+    [9, "upvotes"],
+    [10, "downvotes"]
+];
 
 var columnDefs = [{
     title: "",
@@ -36,7 +39,26 @@ var columnDefs = [{
 }, {
     title: "Assignee",
     type: "text"
-}];
+},
+    {
+        title: "",
+        render: function (data, type, row, meta) {
+            if (type == "sort" || type == 'type')
+                return data;
+            return `<a class="thumbsup fa fa-thumbs-o-up btn" href="#"> ${data}</a>`;
+        },
+        type: "number"
+        disabled: true
+    },
+    {
+        title: "",
+        render: function (data, type, row, meta) {
+            if (type == "sort" || type == 'type')
+                return data;
+            return `<a class="thumbsdown fa fa-thumbs-o-down btn" href="#"> ${data}</a>`;
+        },
+        disabled: true
+    }];
 
 $(document).ready(function () {
 
@@ -60,7 +82,10 @@ $(document).ready(function () {
             style: 'multi',
             selector: 'td:first-child'
         },*/
-        select: 'single',
+        select: {
+            style: 'single',
+            toggleable: false
+        },
         order: [[1, 'asc']],
 
         dom: 'Blfrtip',
@@ -92,6 +117,141 @@ $(document).ready(function () {
         ]
     });
 
+    // thumbs up
+    $(document).on('click', "[id^='example'] .thumbsup", 'tr', function (x) {
+        var tableID = $(this).closest('table').attr('id');    // id of the table
+        var that = $('#' + tableID)[0].altEditor;
+        var row = that.s.dt.rows({
+            selected: true
+        });
+
+        // get thumbs up count
+        var tuc = row.data()[0][9];
+        tuc++;
+
+        // update the backend row
+        var xhr = new XMLHttpRequest();
+
+        console.log(row); //DEBUG
+
+        var url = 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?api_key=key1TJZtE720NcvkV';
+        xhr.open("PUT", url);
+
+        //xhr.setRequestHeader("Authorization", "Bearer YOUR_API_KEY");
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+            }
+        };
+
+        var rowid = row.data()[0][1];
+        var type = row.data()[0][2];
+        var numlink = row.data()[0][3];
+        var desc = row.data()[0][4];
+        var state = row.data()[0][5];
+        var loccity = row.data()[0][6];
+        var remarks = row.data()[0][7];
+        var assignee = row.data()[0][8];
+        var tdc = row.data()[0][10];
+
+        row.data()[0][9] = tuc;
+        row.invalidate();
+        that.s.dt.draw(false);
+
+
+        var data = `{"records": [{"id": "${rowid}",
+                     "fields": {
+                       "Type": "${type}",
+                       "Number/Link": "${numlink}",
+                       "Description": "${desc}",
+                       "State": "${state}",
+                       "Location/City": "${loccity}",
+                       "Remarks": "${remarks}",
+                       "Assignee": "${assignee}",
+                       "upvotes": ${tuc},
+                       "downvotes": ${tdc}
+                     }
+                   }
+                 ]
+               }`;
+
+        console.log(data);
+        xhr.send(data);
+
+
+        x.stopPropagation(); //avoid open "Edit" dialog
+    });
+
+    // thumbs down
+    $(document).on('click', "[id^='example'] .thumbsdown", 'tr', function (x) {
+        var tableID = $(this).closest('table').attr('id');    // id of the table
+        var that = $('#' + tableID)[0].altEditor;
+        var row = that.s.dt.rows({
+            selected: true
+        });
+
+        // get thumbs down count
+        var tdc = row.data()[0][10];
+        tdc++;
+
+        // update the backend row
+        var xhr = new XMLHttpRequest();
+
+        console.log(row); //DEBUG
+
+        var url = 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?api_key=key1TJZtE720NcvkV';
+        xhr.open("PUT", url);
+
+        //xhr.setRequestHeader("Authorization", "Bearer YOUR_API_KEY");
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+            }
+        };
+
+        var rowid = row.data()[0][1];
+        var type = row.data()[0][2];
+        var numlink = row.data()[0][3];
+        var desc = row.data()[0][4];
+        var state = row.data()[0][5];
+        var loccity = row.data()[0][6];
+        var remarks = row.data()[0][7];
+        var assignee = row.data()[0][8];
+        var tuc = row.data()[0][9];
+
+        row.data()[0][10] = tdc;
+        row.invalidate();
+        that.s.dt.draw(false);
+
+        var data = `{"records": [{"id": "${rowid}",
+                     "fields": {
+                       "Type": "${type}",
+                       "Number/Link": "${numlink}",
+                       "Description": "${desc}",
+                       "State": "${state}",
+                       "Location/City": "${loccity}",
+                       "Remarks": "${remarks}",
+                       "Assignee": "${assignee}",
+                       "upvotes": ${tuc},
+                       "downvotes": ${tdc}
+                     }
+                   }
+                 ]
+               }`;
+
+        console.log(data);
+        xhr.send(data);
+
+
+        x.stopPropagation(); //avoid open "Edit" dialog
+    });
+
     // Edit
     $(document).on('click', "[id^='example'] tbody ", 'tr', function () {
         var tableID = $(this).closest('table').attr('id');    // id of the table
@@ -118,9 +278,8 @@ $(document).ready(function () {
         success: function (data) {
             data.records.forEach(function (element, index) {
                 //console.log("bed index : ", index);
-                var fieldArr = new Array(9);
+                var fieldArr = new Array(11);
                 for (i = 0; i < colArray.length; i++) {
-
                     if (i === 1) {
                         fieldArr[i] = element.id;
                     } else {

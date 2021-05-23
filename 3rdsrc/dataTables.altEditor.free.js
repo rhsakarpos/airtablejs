@@ -385,6 +385,8 @@
                 $('form[name="altEditor-edit-form-' + this.random_id + '"] *').filter(':input[type="checkbox"]').each(function (i) {
                     rowDataArray[$(this).attr('id')] = this.checked;
                 });
+
+                // begin custom code to update backend
                 var xhr = new XMLHttpRequest();
 
                 console.log(rowDataArray); //DEBUG
@@ -427,7 +429,7 @@
 
 
                 xhr.send(data);
-
+                // end custom code to update backend
 
                 var checkFilesQueued = function () {
                     if (numFilesQueued == 0) {
