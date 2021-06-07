@@ -2,73 +2,90 @@ var stateOptions = {"Karnataka": "Karnataka", "Bhopal": "Bhopal"};
 
 var colArray = [
     [0, ""],
-    [1, "Id"],
-    [2, "Type"],
-    [3, "Number/Link"],
-    [4, "Description"],
-    [5, "State"],
-    [6, "Location/City"],
-    [7, "Remarks"],
-    [8, "Assignee"],
-    [9, "upvotes"],
-    [10, "downvotes"]
+    [1, ""],
+    [2, "Case ID"],
+    [3, "Timestamp"],
+    [4, "123Volunteer Password"],
+    [5, "Patient Data (Copy paste from the input patient data as is)"],
+    [6, "Name of the Case Referrer (Copy from input patient data - not attendant name)"],
+    [7, "Phone number of the Case Referrer (Copy from input patient data - not attendant number)"],
+    [8, "Case Owner Name (123Volunteer)"],
+    [9, "Case Owner Number (123Volunteer)"],
+    [10, "Status"],
+    [11, "Help Needed"],
+    [13, "BU Number / Govt Patient ID"],
+    [14, "SRF ID"],
+    [15, "Attendant Name"],
+    [16, "Attendant Number"],
+    [17, "Attendant Alternate Number"],
+    [18, "Patient Location (State/City/Area with PINCODE)"],
+    [19, "Progress / Closure Log (Please add all steps/info copied here. Even if you are editing the submission, please add complete info.)"],
+    [20, "Remarks on the request"],
+    [21, "Update Link (Submit first time--> Right click copy the link of \"Edit your response --> Click \"Edit your response\"--> Add the link here and submit again)"]
 ];
 
 var columnDefs = [{
-    title: "",
     "visible": false,
     type: "hidden"
 }, {
-    title: "Id",
     "visible": false,
     type: "hidden"
 }, {
-    title: "Type",
-    "visible": false,
+    title: "Case ID"
+
+}, {
+    title: "Timestamp",
     type: "text"
 }, {
-    title: "Number/Link"
+    title: "123Volunteer Password"
     //no type = text
 }, {
-    title: "Description.",
+    title: "Patient Data (Copy paste from the input patient data as is)\""
+    //no type = text
+}, {
+    title: "Name of the Case Referrer (Copy from input patient data - not attendant name)"
+    //no type = text
+}, {
+    title: "Phone number of the Case Referrer (Copy from input patient data - not attendant number)"
+    //no type = text
+}, {
+    title: "Case Owner Name (123Volunteer)"
+    //no type = text
+}, {
+    title: "Case Owner Number (123Volunteer)"
+    //no type = text
+}, {
+    title: "Status"
+    //no type = text
+}, {
+    title: "Help Needed"
+    //no type = text
+}, {
+    title: "BU Number / Govt Patient ID."
+}, {
+    title: "SRF ID"
+}, {
+    title: "Attendant Name",
     type: "text"
 }, {
-    title: "State",
-    type: "select",
-    options: stateOptions,
-    select2: {width: "100%"},
-    render: function (data, type, row, meta) {
-        if (data == null || !(data in stateOptions)) return null;
-        return stateOptions[data];
-    }
-}, {
-    title: "Location/City",
+    title: "Attendant Number",
     type: "text"
 }, {
-    title: "Remarks",
-    type: "text"
+    title: "Attendant Alternate Number"
+    //no type = text
 }, {
-    title: "Assignee",
+    title: "Patient Location (State/City/Area with PINCODE)",
     type: "text"
-},
-    {
-        title: "upvotes",
-        render: function (data, type, row, meta) {
-            if (type == "sort" || type == 'type')
-                return data;
-            return `<a class="thumbsup fa fa-thumbs-o-up btn" href="#"> ${data}</a>`;
-        },
-        type: "hidden"
-    },
-    {
-        title: "downvotes",
-        render: function (data, type, row, meta) {
-            if (type == "sort" || type == 'type')
-                return data;
-            return `<a class="thumbsdown fa fa-thumbs-o-down btn" href="#"> ${data}</a>`;
-        },
-        type: "hidden"
-    }];
+},{
+    title: "Progress / Closure Log (Please add all steps/info copied here. Even if you are editing the submission, please add complete info.)",
+    type: "text"
+},{
+    title: "Remarks on the request",
+    type: "text"
+},{
+    title: "Update Link (Submit first time--> Right click copy the link of \"Edit your response --> Click \"Edit your response\"--> Add the link here and submit again)",
+    type: "text"
+}];
 
 $(document).ready(function () {
 
@@ -145,7 +162,7 @@ $(document).ready(function () {
 
         console.log(row); //DEBUG
 
-        var url = 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?api_key=key1TJZtE720NcvkV';
+        var url = 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Cases?api_key=key1TJZtE720NcvkV';
         xhr.open("PUT", url);
 
         //xhr.setRequestHeader("Authorization", "Bearer YOUR_API_KEY");
@@ -213,7 +230,7 @@ $(document).ready(function () {
 
         console.log(row); //DEBUG
 
-        var url = 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?api_key=key1TJZtE720NcvkV';
+        var url = 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Cases?api_key=key1TJZtE720NcvkV';
         xhr.open("PUT", url);
 
         //xhr.setRequestHeader("Authorization", "Bearer YOUR_API_KEY");
@@ -279,7 +296,7 @@ $(document).ready(function () {
 
 
     $.ajax({
-        url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?maxRecords=1000&view=Grid%20view&api_key=key1TJZtE720NcvkV',
+        url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Cases?maxRecords=1000&view=Grid%20view&api_key=key1TJZtE720NcvkV',
         type: 'GET',
         dataType: 'json',
         contentType: "application/json",
@@ -289,7 +306,7 @@ $(document).ready(function () {
         success: function (data) {
             data.records.forEach(function (element, index) {
                 //console.log("bed index : ", index);
-                var fieldArr = new Array(11);
+                var fieldArr = new Array(21);
                 for (i = 0; i < colArray.length; i++) {
                     if (i === 1) {
                         fieldArr[i] = element.id;
@@ -312,7 +329,7 @@ $(document).ready(function () {
         for (var i = 0; i < t.rows('.selected').data().length; i++) {
             console.log(t.rows('.selected').data()[i]);
             $.ajax({
-                url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Beds?api_key=key1TJZtE720NcvkV&records[]=' +
+                url: 'https://api.airtable.com/v0/appYhaaeNjkSNvTiw/Cases?api_key=key1TJZtE720NcvkV&records[]=' +
                     t.rows('.selected').data()[i][1],
                 type: 'DELETE',
                 success: function (result) {
@@ -325,7 +342,7 @@ $(document).ready(function () {
 
     // Add row
     $('#addbutton').on('click', function () {
-        var that = $( '#example' )[0].altEditor;
+        var that = $('#example')[0].altEditor;
         that._openAddModal();
         $('#altEditor-add-form-' + that.random_id)
             .off('submit')
